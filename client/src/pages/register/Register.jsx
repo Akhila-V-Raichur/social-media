@@ -22,11 +22,17 @@ const Register = () => {
     try {
       await axios.post("http://localhost:8800/api/auth/register", inputs);
     } catch (err) {
-      setErr(err.response.data);
+      if (err.response) {
+        // Server responded with an error
+        setErr(err.response.data);
+      } else {
+        // There was a connection error
+        setErr({ message: "Connection error. Please try again later." });
+      }
     }
   };
 
-  console.log(err)
+  console.log(err);
 
   return (
     <div className="register">
@@ -70,7 +76,7 @@ const Register = () => {
               name="name"
               onChange={handleChange}
             />
-            {err && err}
+            {err && err.message && <p>Error: {err.message}</p>}
             <button onClick={handleClick}>Register</button>
           </form>
         </div>
